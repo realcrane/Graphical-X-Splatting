@@ -87,7 +87,7 @@ Re-activate the env (`conda deactivate && conda activate <ENV>`) and confirm `nv
 ### 1.4 Install Python dependencies
 
 ```bash
-pip install numpy pillow tqdm rich matplotlib prompt_toolkit pytorch-msssim scipy opencv-python plyfile tensorboard
+pip install "numpy>=2" pillow tqdm rich matplotlib prompt_toolkit pytorch-msssim scipy opencv-python plyfile tensorboard
 ```
 
 ### 1.5 Build the CUDA extensions
