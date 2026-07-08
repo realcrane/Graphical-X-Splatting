@@ -357,6 +357,9 @@ figcaption b, figcaption strong { color: var(--main-txt-color); font-weight: 600
 .gallery { margin-top: 0.8rem; }
 .gallery + .gallery { margin-top: 2rem; }
 .gallery .g-head { font-size: 1.02rem; font-weight: 600; margin-bottom: 0.6rem; }
+/* center a gallery that fits without scrolling (e.g. the 3-tile Upgrading strip) */
+.gallery-center .g-head { text-align: center; }
+.gallery-center .g-scroll { justify-content: center; }
 .gallery .g-head .setting { color: var(--muted-txt-color); font-weight: 400; }
 .g-scroll {
   display: grid; gap: 0.7rem; grid-auto-flow: column;
