@@ -8,7 +8,7 @@
   <script>(function(){try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 
   <title>GraphiXS: A Graphical Model for 4D Gaussian Splatting under Uncertainty</title>
-  <meta name="description" content="GraphiXS — a probabilistic framework that holistically models data uncertainty (sparse views, missing frames, faulty cameras) in 4D Gaussian Splatting. SIGGRAPH Conference Papers 2026.">
+  <meta name="description" content="GraphiXS: a probabilistic framework that holistically models data uncertainty (sparse views, missing frames, faulty cameras) in 4D Gaussian Splatting. SIGGRAPH Conference Papers 2026.">
   <meta name="author" content="Doğa Yılmaz, Jialin Zhu, Deshan Gong, He Wang">
   <link rel="canonical" href="https://graphixs.yilmazdoga.net/">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -120,7 +120,7 @@
       <figure>
         <div class="media-frame">
           <img src="assets/images/teaser.webp" width="1920" height="651"
-               alt="GraphiXS versus prior 4DGS methods under 50% spatial sparsity, temporal sparsity at 10 FPS, and 37% spatio-temporal sparsity — GraphiXS keeps sharper detail and higher PSNR.">
+               alt="GraphiXS versus prior 4DGS methods under 50% spatial sparsity, temporal sparsity at 10 FPS, and 37% spatio-temporal sparsity. GraphiXS keeps sharper detail and higher PSNR.">
         </div>
         <figcaption>
           <b>GraphiXS outperforms existing 4D Gaussian Splatting methods under many types of data uncertainty.</b>
@@ -168,16 +168,37 @@
       <h2 class="section-title grad-text">Method</h2>
       <div class="section-body">
         <p class="lead">
-          GraphiXS recasts 4D Gaussian Splatting as a <b>generative process</b> and expresses it as a graphical
-          model. By treating rendering as sampling &mdash; and treating camera pose and frame time as random
-          variables rather than fixed observations &mdash; every step can carry uncertainty, which is what lets the
-          model reason about missing or corrupted data.
+          GraphiXS reframes 4D Gaussian Splatting as a <b>probabilistic model</b>, which is what keeps it robust
+          when capture data is missing or corrupted. Below, we walk through how it represents that uncertainty and
+          the pieces that make reconstruction work.
         </p>
 
-        <!-- 1. graphical model -->
+        <!-- 1. data uncertainty settings -->
+        <h3 class="subhead">Modeling data uncertainty</h3>
+        <p>
+          Real captures are rarely complete. GraphiXS models the whole spectrum of uncertainty under one roof:
+          missing cameras (<i>spatial sparsity</i>), dropped or low-frame-rate frames (<i>temporal sparsity</i>),
+          unsynchronized cameras, and combined <i>spatio-temporal</i> corruption from faulty cameras.
+        </p>
+        <figure class="fig-clip">
+          <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/data_uncertainty.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+          <figcaption>
+            The animation steps through each setting in turn. <b>Standard</b> capture has complete data;
+            <b>spatial sparsity</b> removes cameras; <b>temporal sparsity</b> drops frames or lowers the frame rate;
+            and <b>spatio-temporal</b> corruption from faulty cameras combines both. GraphiXS represents all of them
+            within the same framework.
+          </figcaption>
+        </figure>
+
+        <!-- 2. generative model -->
         <h3 class="subhead">A generative model for 4DGS</h3>
-        <figure style="max-width:560px; margin:1.5rem auto;">
-          <div class="media-frame" style="background:#fff; padding:1.2rem;">
+        <p>
+          At its core, GraphiXS views 4D Gaussian Splatting as a <b>generative process</b>. Rendering becomes
+          sampling, and camera pose and frame time become random variables rather than fixed observations, so every
+          step can carry uncertainty. The plate diagram below writes this joint distribution as a graphical model.
+        </p>
+        <figure class="fig-diagram">
+          <div class="media-frame">
             <img src="assets/images/graphical_model.webp" width="1500" height="844"
                  alt="Plate-notation graphical model of GraphiXS relating time T, cameras C, rays R, component parameters, and pixels X across the four steps of the generative process.">
           </div>
@@ -185,52 +206,30 @@
             The GraphiXS graphical model. The four colors correspond to the four steps of the generative process:
             (1) sample a camera and a time, (2) cast rays, (3) select the components a ray hits, and
             (4) generate pixel color. Factorizing the joint distribution this way makes each step independently
-            modelable and turns 4DGS into <b>Bayesian inference</b>.
+            modelable and turns 4DGS into Bayesian inference.
+          </figcaption>
+        </figure>
+        <figure class="fig-clip">
+          <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/generative_model.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+          <figcaption>
+            The generative process in motion. GraphiXS samples a camera and a time, casts rays into the scene,
+            picks out the 4D components each ray passes through, and produces the pixel colors. Training runs this
+            in reverse, inferring the component parameters by MAP.
           </figcaption>
         </figure>
 
-        <div class="media-grid" style="margin-top:1rem;">
-          <figure>
-            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/generative_model_seg1.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
-            <div class="label">Step 1</div><div class="sub">Sample a camera &amp; time</div>
-          </figure>
-          <figure>
-            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/generative_model_seg2.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
-            <div class="label">Step 2&ndash;3</div><div class="sub">Splat components into the view</div>
-          </figure>
-          <figure>
-            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/generative_model_seg3.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
-            <div class="label">Step 4</div><div class="sub">Infer parameters by MAP</div>
-          </figure>
-        </div>
+        <!-- 3. component confidence -->
+        <h3 class="subhead">Component confidence</h3>
+        <figure>
+          <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/component_confidence.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+          <figcaption>
+            A <b>component-confidence</b> term encourages well-behaved components to be visible across all cameras
+            and times. This is what lets GraphiXS make good &lsquo;guesses&rsquo; in regions where data is missing
+            in space or time.
+          </figcaption>
+        </figure>
 
-        <!-- 2. data uncertainty settings -->
-        <h3 class="subhead">Modeling data uncertainty</h3>
-        <p>
-          Real captures are rarely complete. GraphiXS models the whole spectrum of uncertainty under one roof:
-          missing cameras (<i>spatial sparsity</i>), dropped or low-frame-rate frames (<i>temporal sparsity</i>),
-          unsynchronized cameras, and combined <i>spatio-temporal</i> corruption from faulty cameras.
-        </p>
-        <div class="media-grid">
-          <figure>
-            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/standard.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
-            <div class="label">Standard</div><div class="sub">Full data</div>
-          </figure>
-          <figure>
-            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/spatial.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
-            <div class="label">Spatial</div><div class="sub">Missing cameras</div>
-          </figure>
-          <figure>
-            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/temporal.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
-            <div class="label">Temporal</div><div class="sub">Dropped frames</div>
-          </figure>
-          <figure>
-            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/spatiotemporal.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
-            <div class="label">Spatio-temporal</div><div class="sub">Faulty cameras</div>
-          </figure>
-        </div>
-
-        <!-- 3. higher-order motion -->
+        <!-- 4. higher-order motion -->
         <h3 class="subhead">Higher-order motion</h3>
         <p>
           Component motion follows a <b>4th-order model</b> (position, velocity, acceleration, jerk, and snap),
@@ -248,11 +247,11 @@
           </figure>
         </div>
 
-        <!-- 4. priors -->
+        <!-- 5. priors -->
         <h3 class="subhead">Three priors that regulate the model</h3>
         <p>
           Because infinitely many component configurations can explain the same data, GraphiXS imposes priors that
-          steer the optimization toward well-behaved solutions &mdash; on <b>motion</b>, on <b>opacity</b>, and on
+          steer the optimization toward well-behaved solutions: on <b>motion</b>, on <b>opacity</b>, and on
           <b>shape</b>. Toggle each below to see its effect.
         </p>
 
@@ -287,20 +286,9 @@
           </figure>
         </div>
 
-        <!-- 5. component confidence -->
-        <h3 class="subhead">Component confidence</h3>
-        <figure>
-          <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/component_confidence.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
-          <figcaption>
-            A <b>component-confidence</b> term encourages well-behaved components to be visible across all cameras
-            and times. This is what lets GraphiXS make good &lsquo;guesses&rsquo; in regions where data is missing
-            in space or time.
-          </figcaption>
-        </figure>
-
         <p style="margin-top:2rem;">
-          GraphiXS is a <b>framework, not a single model</b>. We instantiate it with two primitives &mdash;
-          <b>GraphiGS</b> (approximate Gaussian) and <b>GraphiTS</b> (Student&rsquo;s-t) &mdash; and further show it
+          GraphiXS is a <b>framework, not a single model</b>. We instantiate it with two primitives,
+          <b>GraphiGS</b> (approximate Gaussian) and <b>GraphiTS</b> (Student&rsquo;s-t), and further show it
           can &lsquo;upgrade&rsquo; existing methods such as FreeTimeGS to handle uncertainty. We compare against
           4DGS-1&nbsp;[ICLR&rsquo;24], 4DGS-2&nbsp;[CVPR&rsquo;24], Ex4DGS&nbsp;[NeurIPS&rsquo;24], and
           FreeTimeGS&nbsp;[CVPR&rsquo;25] on the Neural&nbsp;3D&nbsp;Video and Google&nbsp;Immersive datasets.
@@ -338,7 +326,7 @@
 
         <!-- static galleries -->
         <div class="gallery" style="margin-top:2.4rem;">
-          <div class="g-head">Spatio-temporal sparsity <span class="setting">&mdash; 37% missing (Faulty Cam 3)</span></div>
+          <div class="g-head">Spatio-temporal sparsity <span class="setting">&middot; 37% missing (Faulty Cam 3)</span></div>
           <div class="g-scroll">
             <div class="g-item gt"><img src="assets/images/results/q_fc3_gt.webp" alt="Ground truth"><div class="g-label">Ground Truth</div></div>
             <div class="g-item"><img src="assets/images/results/q_fc3_4dgs_iclr.webp" alt="4DGS-1"><div class="g-label">4DGS-1</div></div>
@@ -351,7 +339,7 @@
         </div>
 
         <div class="gallery">
-          <div class="g-head">Spatial sparsity <span class="setting">&mdash; 50% of cameras missing</span></div>
+          <div class="g-head">Spatial sparsity <span class="setting">&middot; 50% of cameras missing</span></div>
           <div class="g-scroll">
             <div class="g-item gt"><img src="assets/images/results/q_sv50_gt.webp" alt="Ground truth"><div class="g-label">Ground Truth</div></div>
             <div class="g-item"><img src="assets/images/results/q_sv50_4dgs_iclr.webp" alt="4DGS-1"><div class="g-label">4DGS-1</div></div>
@@ -364,7 +352,7 @@
         </div>
 
         <div class="gallery">
-          <div class="g-head">Upgrading an existing method <span class="setting">&mdash; FreeTimeGS + GraphiXS</span></div>
+          <div class="g-head">Upgrading an existing method <span class="setting">&middot; FreeTimeGS + GraphiXS</span></div>
           <div class="g-scroll" style="grid-auto-columns: minmax(180px, 1fr);">
             <div class="g-item gt"><img src="assets/images/results/q_upg_gt.webp" alt="Ground truth"><div class="g-label">Ground Truth</div></div>
             <div class="g-item"><img src="assets/images/results/q_upg_ftgs.webp" alt="FreeTimeGS"><div class="g-label">FreeTimeGS</div></div>
