@@ -310,6 +310,9 @@ figcaption b, figcaption strong { color: var(--main-txt-color); font-weight: 600
 }
 .pair-center { text-align: center; }
 
+/* hairline separator between the three priors */
+.prior-sep { border: none; border-top: 1px solid var(--hairline); margin: 1.6rem 0; }
+
 /* ---------------- A/B slider ---------------- */
 .ab-slider {
   position: relative; width: 100%; overflow: hidden;
