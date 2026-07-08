@@ -1,1 +1,427 @@
-<h1>Graphixs</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0a0a">
+  <script>(function(){try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+
+  <title>GraphiXS: A Graphical Model for 4D Gaussian Splatting under Uncertainty</title>
+  <meta name="description" content="GraphiXS — a probabilistic framework that holistically models data uncertainty (sparse views, missing frames, faulty cameras) in 4D Gaussian Splatting. SIGGRAPH Conference Papers 2026.">
+  <meta name="author" content="Doğa Yılmaz, Jialin Zhu, Deshan Gong, He Wang">
+  <link rel="canonical" href="https://graphixs.yilmazdoga.net/">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+  <!-- Open Graph / social sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://graphixs.yilmazdoga.net/">
+  <meta property="og:title" content="GraphiXS: A Graphical Model for 4D Gaussian Splatting under Uncertainty">
+  <meta property="og:description" content="A probabilistic framework that holistically models data uncertainty in 4D Gaussian Splatting. SIGGRAPH Conference Papers 2026.">
+  <meta property="og:image" content="https://graphixs.yilmazdoga.net/assets/images/teaser.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GraphiXS: A Graphical Model for 4D Gaussian Splatting under Uncertainty">
+  <meta name="twitter:description" content="A probabilistic framework that holistically models data uncertainty in 4D Gaussian Splatting. SIGGRAPH Conference Papers 2026.">
+  <meta name="twitter:image" content="https://graphixs.yilmazdoga.net/assets/images/teaser.webp">
+
+  <link rel="preload" href="assets/fonts/LinBiolinum_R.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "Graphical X Splatting (GraphiXS): A Graphical Model for 4D Gaussian Splatting under Uncertainty",
+    "author": [
+      {"@type": "Person", "name": "Doğa Yılmaz", "url": "https://yilmazdoga.net/"},
+      {"@type": "Person", "name": "Jialin Zhu"},
+      {"@type": "Person", "name": "Deshan Gong"},
+      {"@type": "Person", "name": "He Wang"}
+    ],
+    "datePublished": "2026",
+    "publisher": {"@type": "Organization", "name": "ACM"},
+    "identifier": "https://doi.org/10.1145/3799902.3811085"
+  }
+  </script>
+</head>
+
+<body>
+  <!-- ==================== NAV ==================== -->
+  <header class="top-nav" role="navigation" aria-label="Primary">
+    <div class="nav-inner">
+      <nav class="nav-links">
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#citation">Citation</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch color theme" title="Switch theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <!-- ==================== HERO ==================== -->
+    <div class="hero">
+      <h1 class="wordmark grad-text">GraphiXS</h1>
+      <p class="paper-title">Graphical X Splatting: A Graphical Model for 4D Gaussian Splatting under Uncertainty</p>
+
+      <div class="authors">
+        <span class="author"><a class="grad-hover" href="https://yilmazdoga.net">Doğa Yılmaz</a><sup>1</sup></span>
+        <span class="author">Jialin Zhu<sup>2</sup></span>
+        <span class="author">Deshan Gong<sup>3</sup></span>
+        <span class="author"><a class="grad-hover" href="https://drhewang.com/">He Wang</a><sup>1</sup></span>
+      </div>
+      <div class="affils">
+        <span><sup>1</sup> University College London</span>
+        <span><sup>2</sup> Baidu Inc.</span>
+        <span><sup>3</sup> The University of Hong Kong</span>
+      </div>
+
+      <p class="venue" style="margin-top:1.3rem;">
+        <strong>SIGGRAPH Conference Papers &rsquo;26</strong> &middot; July 19&ndash;23, 2026 &middot; Los Angeles, CA
+      </p>
+
+      <!-- ==================== RESOURCE BUTTONS ==================== -->
+      <div class="button-row">
+        <a class="btn" href="https://graphixs.cdn.yilmazdoga.net/Graphical_X_Splatting.pdf">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5z"/></svg>
+          <span class="btn-label">Paper (29&nbsp;MB)</span>
+        </a>
+        <a class="btn" href="https://graphixs.cdn.yilmazdoga.net/Graphical_X_Splatting_LQ.pdf">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5z"/></svg>
+          <span class="btn-label">Paper (2&nbsp;MB)</span>
+        </a>
+        <a class="btn" href="https://arxiv.org/abs/2601.19843">
+          <span class="btn-label">arXiv</span>
+        </a>
+        <a class="btn" href="https://github.com/realcrane/Graphical-X-Splatting">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span class="btn-label">Code</span>
+        </a>
+        <a class="btn todo" href="#" aria-disabled="true" title="Poster coming soon" onclick="return false;">
+          <span class="btn-label">Poster</span><span class="tag">soon</span>
+        </a>
+        <a class="btn todo" href="#" aria-disabled="true" title="Slides coming soon" onclick="return false;">
+          <span class="btn-label">Slides</span><span class="tag">soon</span>
+        </a>
+        <a class="btn todo" href="#" aria-disabled="true" title="Video coming soon" onclick="return false;">
+          <span class="btn-label">Video</span><span class="tag">soon</span>
+        </a>
+        <a class="btn" href="#citation">
+          <span class="btn-label">BibTeX</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ==================== TEASER ==================== -->
+    <section class="teaser" aria-label="Teaser">
+      <figure>
+        <div class="media-frame">
+          <img src="assets/images/teaser.webp" width="1920" height="651"
+               alt="GraphiXS versus prior 4DGS methods under 50% spatial sparsity, temporal sparsity at 10 FPS, and 37% spatio-temporal sparsity — GraphiXS keeps sharper detail and higher PSNR.">
+        </div>
+        <figcaption>
+          <b>GraphiXS outperforms existing 4D Gaussian Splatting methods under many types of data uncertainty.</b>
+          Left: 50% of cameras missing. Middle: low-frame-rate 10&nbsp;FPS capture. Right: 37% of frames randomly dropped.
+          Across all three, GraphiXS reconstructs sharper, higher-fidelity detail (per-region PSNR shown).
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ==================== ABSTRACT ==================== -->
+    <section id="abstract" aria-label="Abstract">
+      <h2 class="section-title grad-text">Abstract</h2>
+      <div class="section-body abstract-body">
+        <p>
+          We propose a new framework to systematically incorporate <b>data uncertainty</b> in Gaussian Splatting.
+          Being the new paradigm of neural rendering, Gaussian Splatting has been investigated in many applications,
+          with the main effort in extending its representation, improving its optimization process, and accelerating
+          its speed. However, one orthogonal, much needed, but under-explored area is the representation of data
+          uncertainty. In standard 4D Gaussian Splatting, data uncertainty can manifest as view sparsity, missing
+          frames, camera asynchronization, <i>etc.</i> So far, there has been little research to holistically
+          incorporating various types of data uncertainty under a single framework.
+        </p>
+        <p>
+          To this end, we propose <b>Graphical X Splatting</b>, or <b>GraphiXS</b>, a new probabilistic framework
+          that considers multiple types of data uncertainty, aiming for a fundamental augmentation of the current
+          4D Gaussian Splatting paradigm in a probabilistic setting. GraphiXS is general and can be instantiated
+          with a range of primitives, <i>e.g.</i> Gaussians, Student&rsquo;s-t. Furthermore, GraphiXS can be used to
+          &lsquo;upgrade&rsquo; existing methods to accommodate data uncertainty. Through exhaustive evaluation and
+          comparison, we demonstrate that GraphiXS can systematically model various uncertainties in data, outperform
+          existing methods in many settings where data are missing or polluted in space and time, and therefore is a
+          major generalization of the current 4D Gaussian Splatting research.
+        </p>
+
+        <ul class="contrib-list">
+          <li>A new probabilistic framework to holistically incorporate data uncertainty as sparse spatial and temporal sampling in 4DGS.</li>
+          <li>A new graphical model that can be instantiated with different primitives and used to &lsquo;upgrade&rsquo; existing 4DGS methods.</li>
+          <li>A new way of introducing stochasticity into the individual steps of 4DGS.</li>
+          <li>New priors that effectively regulate model behavior, leading to more effective optimization.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ==================== METHOD ==================== -->
+    <section id="method" aria-label="Method">
+      <h2 class="section-title grad-text">Method</h2>
+      <div class="section-body">
+        <p class="lead">
+          GraphiXS recasts 4D Gaussian Splatting as a <b>generative process</b> and expresses it as a graphical
+          model. By treating rendering as sampling &mdash; and treating camera pose and frame time as random
+          variables rather than fixed observations &mdash; every step can carry uncertainty, which is what lets the
+          model reason about missing or corrupted data.
+        </p>
+
+        <!-- 1. graphical model -->
+        <h3 class="subhead">A generative model for 4DGS</h3>
+        <figure style="max-width:560px; margin:1.5rem auto;">
+          <div class="media-frame" style="background:#fff; padding:1.2rem;">
+            <img src="assets/images/graphical_model.webp" width="1500" height="844"
+                 alt="Plate-notation graphical model of GraphiXS relating time T, cameras C, rays R, component parameters, and pixels X across the four steps of the generative process.">
+          </div>
+          <figcaption>
+            The GraphiXS graphical model. The four colors correspond to the four steps of the generative process:
+            (1) sample a camera and a time, (2) cast rays, (3) select the components a ray hits, and
+            (4) generate pixel color. Factorizing the joint distribution this way makes each step independently
+            modelable and turns 4DGS into <b>Bayesian inference</b>.
+          </figcaption>
+        </figure>
+
+        <div class="media-grid" style="margin-top:1rem;">
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/generative_model_seg1.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <div class="label">Step 1</div><div class="sub">Sample a camera &amp; time</div>
+          </figure>
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/generative_model_seg2.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <div class="label">Step 2&ndash;3</div><div class="sub">Splat components into the view</div>
+          </figure>
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/generative_model_seg3.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <div class="label">Step 4</div><div class="sub">Infer parameters by MAP</div>
+          </figure>
+        </div>
+
+        <!-- 2. data uncertainty settings -->
+        <h3 class="subhead">Modeling data uncertainty</h3>
+        <p>
+          Real captures are rarely complete. GraphiXS models the whole spectrum of uncertainty under one roof:
+          missing cameras (<i>spatial sparsity</i>), dropped or low-frame-rate frames (<i>temporal sparsity</i>),
+          unsynchronized cameras, and combined <i>spatio-temporal</i> corruption from faulty cameras.
+        </p>
+        <div class="media-grid">
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/standard.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <div class="label">Standard</div><div class="sub">Full data</div>
+          </figure>
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/spatial.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <div class="label">Spatial</div><div class="sub">Missing cameras</div>
+          </figure>
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/temporal.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <div class="label">Temporal</div><div class="sub">Dropped frames</div>
+          </figure>
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/spatiotemporal.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <div class="label">Spatio-temporal</div><div class="sub">Faulty cameras</div>
+          </figure>
+        </div>
+
+        <!-- 3. higher-order motion -->
+        <h3 class="subhead">Higher-order motion</h3>
+        <p>
+          Component motion follows a <b>4th-order model</b> (position, velocity, acceleration, jerk, and snap),
+          derived as the drift of a Brownian motion. It captures fast, non-linear dynamics that a linear motion
+          model misses.
+        </p>
+        <div class="compare-pair pair-center">
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/highorder_motion_linear.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <span class="cap-tag off">Linear motion</span>
+          </figure>
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/highorder_motion_highorder.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <span class="cap-tag on">4th-order motion (Ours)</span>
+          </figure>
+        </div>
+
+        <!-- 4. priors -->
+        <h3 class="subhead">Three priors that regulate the model</h3>
+        <p>
+          Because infinitely many component configurations can explain the same data, GraphiXS imposes priors that
+          steer the optimization toward well-behaved solutions &mdash; on <b>motion</b>, on <b>opacity</b>, and on
+          <b>shape</b>. Toggle each below to see its effect.
+        </p>
+
+        <div class="compare-pair" style="margin-bottom:0.4rem;">
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/motion_prior_without.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <span class="cap-tag off">Motion prior: off</span>
+          </figure>
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/motion_prior_with.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <span class="cap-tag on">Motion prior: on</span>
+          </figure>
+        </div>
+        <div class="compare-pair" style="margin-bottom:0.4rem;">
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/opacity_prior_without.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <span class="cap-tag off">Opacity prior: off</span>
+          </figure>
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/opacity_prior_with.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <span class="cap-tag on">Opacity prior: on</span>
+          </figure>
+        </div>
+        <div class="compare-pair">
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/shape_prior_without.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <span class="cap-tag off">Shape prior: off</span>
+          </figure>
+          <figure>
+            <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/shape_prior_with.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+            <span class="cap-tag on">Shape prior: on</span>
+          </figure>
+        </div>
+
+        <!-- 5. component confidence -->
+        <h3 class="subhead">Component confidence</h3>
+        <figure>
+          <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/component_confidence.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
+          <figcaption>
+            A <b>component-confidence</b> term encourages well-behaved components to be visible across all cameras
+            and times. This is what lets GraphiXS make good &lsquo;guesses&rsquo; in regions where data is missing
+            in space or time.
+          </figcaption>
+        </figure>
+
+        <p style="margin-top:2rem;">
+          GraphiXS is a <b>framework, not a single model</b>. We instantiate it with two primitives &mdash;
+          <b>GraphiGS</b> (approximate Gaussian) and <b>GraphiTS</b> (Student&rsquo;s-t) &mdash; and further show it
+          can &lsquo;upgrade&rsquo; existing methods such as FreeTimeGS to handle uncertainty. We compare against
+          4DGS-1&nbsp;[ICLR&rsquo;24], 4DGS-2&nbsp;[CVPR&rsquo;24], Ex4DGS&nbsp;[NeurIPS&rsquo;24], and
+          FreeTimeGS&nbsp;[CVPR&rsquo;25] on the Neural&nbsp;3D&nbsp;Video and Google&nbsp;Immersive datasets.
+        </p>
+      </div>
+    </section>
+
+    <!-- ==================== RESULTS ==================== -->
+    <section id="results" aria-label="Results">
+      <h2 class="section-title grad-text">Results</h2>
+      <div class="section-body">
+        <p>
+          Drag the divider to compare GraphiXS against Ex4DGS under a <b>faulty-camera</b> setting, where the capture
+          combines spatial and temporal corruption.
+        </p>
+
+        <figure>
+          <div class="ab-slider" id="ab-fcam2">
+            <div class="ab-bottom">
+              <video src="https://graphixs.cdn.yilmazdoga.net/videos/results/fcam2_ex4dgs.mp4" muted loop playsinline preload="metadata" data-autoplay></video>
+            </div>
+            <div class="ab-top">
+              <div class="ab-inner">
+                <video src="https://graphixs.cdn.yilmazdoga.net/videos/results/fcam2_graphixs.mp4" muted loop playsinline preload="metadata" data-autoplay></video>
+              </div>
+            </div>
+            <span class="ab-label left"><span class="ours">GraphiXS</span> (Ours)</span>
+            <span class="ab-label right">Ex4DGS</span>
+            <div class="ab-handle" aria-hidden="true">
+              <span class="grip"><svg viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5V7zm8 0v10l5-5-5-5z"/></svg></span>
+            </div>
+          </div>
+          <figcaption>Faulty Camera setting. <b>Left:</b> GraphiXS (Ours). <b>Right:</b> Ex4DGS. Drag to compare.</figcaption>
+        </figure>
+
+        <!-- static galleries -->
+        <div class="gallery" style="margin-top:2.4rem;">
+          <div class="g-head">Spatio-temporal sparsity <span class="setting">&mdash; 37% missing (Faulty Cam 3)</span></div>
+          <div class="g-scroll">
+            <div class="g-item gt"><img src="assets/images/results/q_fc3_gt.webp" alt="Ground truth"><div class="g-label">Ground Truth</div></div>
+            <div class="g-item"><img src="assets/images/results/q_fc3_4dgs_iclr.webp" alt="4DGS-1"><div class="g-label">4DGS-1</div></div>
+            <div class="g-item"><img src="assets/images/results/q_fc3_4dgs_cvpr.webp" alt="4DGS-2"><div class="g-label">4DGS-2</div></div>
+            <div class="g-item"><img src="assets/images/results/q_fc3_ex4dgs.webp" alt="Ex4DGS"><div class="g-label">Ex4DGS</div></div>
+            <div class="g-item"><img src="assets/images/results/q_fc3_ftgs.webp" alt="FreeTimeGS"><div class="g-label">FreeTimeGS</div></div>
+            <div class="g-item ours"><img src="assets/images/results/q_fc3_graphigs.webp" alt="GraphiGS (ours)"><div class="g-label">GraphiGS (Ours)</div></div>
+            <div class="g-item ours"><img src="assets/images/results/q_fc3_graphits.webp" alt="GraphiTS (ours)"><div class="g-label">GraphiTS (Ours)</div></div>
+          </div>
+        </div>
+
+        <div class="gallery">
+          <div class="g-head">Spatial sparsity <span class="setting">&mdash; 50% of cameras missing</span></div>
+          <div class="g-scroll">
+            <div class="g-item gt"><img src="assets/images/results/q_sv50_gt.webp" alt="Ground truth"><div class="g-label">Ground Truth</div></div>
+            <div class="g-item"><img src="assets/images/results/q_sv50_4dgs_iclr.webp" alt="4DGS-1"><div class="g-label">4DGS-1</div></div>
+            <div class="g-item"><img src="assets/images/results/q_sv50_4dgs_cvpr.webp" alt="4DGS-2"><div class="g-label">4DGS-2</div></div>
+            <div class="g-item"><img src="assets/images/results/q_sv50_ex4dgs.webp" alt="Ex4DGS"><div class="g-label">Ex4DGS</div></div>
+            <div class="g-item"><img src="assets/images/results/q_sv50_ftgs.webp" alt="FreeTimeGS"><div class="g-label">FreeTimeGS</div></div>
+            <div class="g-item ours"><img src="assets/images/results/q_sv50_graphigs.webp" alt="GraphiGS (ours)"><div class="g-label">GraphiGS (Ours)</div></div>
+            <div class="g-item ours"><img src="assets/images/results/q_sv50_graphits.webp" alt="GraphiTS (ours)"><div class="g-label">GraphiTS (Ours)</div></div>
+          </div>
+        </div>
+
+        <div class="gallery">
+          <div class="g-head">Upgrading an existing method <span class="setting">&mdash; FreeTimeGS + GraphiXS</span></div>
+          <div class="g-scroll" style="grid-auto-columns: minmax(180px, 1fr);">
+            <div class="g-item gt"><img src="assets/images/results/q_upg_gt.webp" alt="Ground truth"><div class="g-label">Ground Truth</div></div>
+            <div class="g-item"><img src="assets/images/results/q_upg_ftgs.webp" alt="FreeTimeGS"><div class="g-label">FreeTimeGS</div></div>
+            <div class="g-item ours"><img src="assets/images/results/q_upg_ours.webp" alt="FreeTimeGS upgraded with GraphiXS"><div class="g-label">+ GraphiXS (Ours)</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CITATION ==================== -->
+    <section id="citation" aria-label="Citation">
+      <h2 class="section-title grad-text">Citation</h2>
+      <div class="section-body">
+        <div class="bibtex-wrap">
+          <button class="copy-btn" type="button" data-copy-target="#bibtex">Copy</button>
+          <pre id="bibtex">@inproceedings{yilmaz2026graphixs,
+  author    = {Yılmaz, Doğa and Zhu, Jialin and Gong, Deshan and Wang, He},
+  title     = {Graphical X Splatting (GraphiXS): A Graphical Model for
+               4D Gaussian Splatting under Uncertainty},
+  booktitle = {SIGGRAPH Conference Papers '26},
+  year      = {2026},
+  location  = {Los Angeles, CA, USA},
+  publisher = {ACM},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/3799902.3811085},
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ACKNOWLEDGMENTS ==================== -->
+    <section id="acknowledgments" aria-label="Acknowledgments">
+      <h2 class="section-title grad-text">Acknowledgments</h2>
+      <div class="section-body">
+        <p>
+          This work was supported in part by the Dr.&nbsp;Rabin&nbsp;Ezra Scholarship (Charity No.&nbsp;1116049),
+          awarded to Doğa&nbsp;Yılmaz, and the UK Research and Innovation AIRR Innovator Award
+          (0261-5654-9320-1).
+        </p>
+      </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+      <div>
+        <div class="foot-links">
+          <a class="grad-hover" href="https://yilmazdoga.net">yilmazdoga.net</a>
+          <a class="grad-hover" href="https://github.com/realcrane/Graphical-X-Splatting">Code</a>
+          <a class="grad-hover" href="https://graphixs.cdn.yilmazdoga.net/Graphical_X_Splatting.pdf">Paper</a>
+          <a class="grad-hover" href="https://doi.org/10.1145/3799902.3811085">DOI</a>
+        </div>
+        <div style="margin-top:0.7rem;">&copy; 2026 Doğa Yılmaz &middot; GraphiXS &middot; SIGGRAPH 2026</div>
+      </div>
+    </footer>
+  </main>
+
+  <script src="js/scripts.js"></script>
+</body>
+
+</html>
