@@ -185,7 +185,7 @@ a {
 /* ---------------- buttons ---------------- */
 .button-row {
   display: flex; flex-wrap: wrap; justify-content: center;
-  gap: 0.6rem; margin: 1.8rem auto 0; max-width: 44rem;
+  gap: 0.6rem; margin: 1.8rem auto 0;
 }
 
 .btn {
@@ -201,8 +201,14 @@ a {
   transition: color 0.2s ease, border-color 0.2s ease;
 }
 .btn svg { width: 1.05em; height: 1.05em; fill: currentColor; }
-/* hover: only the label recolors — no lift, shadow, or border-image (keeps the pill rounded) */
-.btn:hover .btn-label {
+/* hover: gradient border (rounded, via border-box) + gradient label — no lift or squaring */
+.btn:not(.todo):hover {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--main-bg-color), var(--main-bg-color)) padding-box,
+    var(--hover-color) border-box;
+}
+.btn:not(.todo):hover .btn-label {
   background: var(--hover-color);
   background-clip: text;
   -webkit-background-clip: text;
@@ -215,7 +221,6 @@ a {
   color: var(--muted-txt-color);
   cursor: not-allowed;
 }
-.btn.todo:hover .btn-label { -webkit-text-fill-color: currentColor; background: none; }
 .btn.todo .tag {
   font-size: 0.68em; letter-spacing: 0.06em; text-transform: uppercase;
   border: 1px solid var(--card-border); border-radius: 5px;
@@ -256,8 +261,6 @@ section { margin: 3.4rem 0; scroll-margin-top: calc(var(--nav-height) + 12px); }
 figure { margin: 1.2rem 0; }
 
 /* centered, size-constrained figures */
-.fig-diagram { max-width: 560px; margin: 1.5rem auto; }
-.fig-diagram .media-frame { background: #fff; padding: 1.2rem; }
 .fig-clip { max-width: 600px; margin: 1.5rem auto; }
 
 .media-frame {
@@ -357,7 +360,7 @@ figcaption b, figcaption strong { color: var(--main-txt-color); font-weight: 600
 .gallery .g-head .setting { color: var(--muted-txt-color); font-weight: 400; }
 .g-scroll {
   display: grid; gap: 0.7rem; grid-auto-flow: column;
-  grid-auto-columns: minmax(150px, 1fr);
+  grid-auto-columns: 220px;
   overflow-x: auto; padding-bottom: 0.6rem;
   scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) transparent;
 }

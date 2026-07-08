@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#0a0a0a">
   <script>(function(){try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 
-  <title>GraphiXS: A Graphical Model for 4D Gaussian Splatting under Uncertainty</title>
+  <title>GraphiXS &middot; SIGGRAPH 2026</title>
   <meta name="description" content="GraphiXS: a probabilistic framework that holistically models data uncertainty (sparse views, missing frames, faulty cameras) in 4D Gaussian Splatting. SIGGRAPH Conference Papers 2026.">
   <meta name="author" content="Doğa Yılmaz, Jialin Zhu, Deshan Gong, He Wang">
   <link rel="canonical" href="https://graphixs.yilmazdoga.net/">
@@ -80,7 +80,7 @@
       </div>
 
       <p class="venue" style="margin-top:1.3rem;">
-        <strong>SIGGRAPH Conference Papers &rsquo;26</strong> &middot; July 19&ndash;23, 2026 &middot; Los Angeles, CA
+        <strong>SIGGRAPH 2026</strong>
       </p>
 
       <!-- ==================== RESOURCE BUTTONS ==================== -->
@@ -105,12 +105,6 @@
         </a>
         <a class="btn todo" href="#" aria-disabled="true" title="Slides coming soon" onclick="return false;">
           <span class="btn-label">Slides</span><span class="tag">soon</span>
-        </a>
-        <a class="btn todo" href="#" aria-disabled="true" title="Video coming soon" onclick="return false;">
-          <span class="btn-label">Video</span><span class="tag">soon</span>
-        </a>
-        <a class="btn" href="#citation">
-          <span class="btn-label">BibTeX</span>
         </a>
       </div>
     </div>
@@ -195,20 +189,8 @@
         <p>
           At its core, GraphiXS views 4D Gaussian Splatting as a <b>generative process</b>. Rendering becomes
           sampling, and camera pose and frame time become random variables rather than fixed observations, so every
-          step can carry uncertainty. The plate diagram below writes this joint distribution as a graphical model.
+          step can carry uncertainty. The animation below walks through this process.
         </p>
-        <figure class="fig-diagram">
-          <div class="media-frame">
-            <img src="assets/images/graphical_model.webp" width="1500" height="844"
-                 alt="Plate-notation graphical model of GraphiXS relating time T, cameras C, rays R, component parameters, and pixels X across the four steps of the generative process.">
-          </div>
-          <figcaption>
-            The GraphiXS graphical model. The four colors correspond to the four steps of the generative process:
-            (1) sample a camera and a time, (2) cast rays, (3) select the components a ray hits, and
-            (4) generate pixel color. Factorizing the joint distribution this way makes each step independently
-            modelable and turns 4DGS into Bayesian inference.
-          </figcaption>
-        </figure>
         <figure class="fig-clip">
           <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/generative_model.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
           <figcaption>
@@ -220,7 +202,7 @@
 
         <!-- 3. component confidence -->
         <h3 class="subhead">Component confidence</h3>
-        <figure>
+        <figure class="fig-clip">
           <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/component_confidence.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
           <figcaption>
             A <b>component-confidence</b> term encourages well-behaved components to be visible across all cameras
@@ -255,7 +237,7 @@
           <b>shape</b>. Toggle each below to see its effect.
         </p>
 
-        <div class="compare-pair" style="margin-bottom:0.4rem;">
+        <div class="compare-pair pair-center" style="margin-bottom:0.4rem;">
           <figure>
             <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/motion_prior_without.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
             <span class="cap-tag off">Motion prior: off</span>
@@ -265,7 +247,7 @@
             <span class="cap-tag on">Motion prior: on</span>
           </figure>
         </div>
-        <div class="compare-pair" style="margin-bottom:0.4rem;">
+        <div class="compare-pair pair-center" style="margin-bottom:0.4rem;">
           <figure>
             <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/opacity_prior_without.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
             <span class="cap-tag off">Opacity prior: off</span>
@@ -275,7 +257,7 @@
             <span class="cap-tag on">Opacity prior: on</span>
           </figure>
         </div>
-        <div class="compare-pair">
+        <div class="compare-pair pair-center">
           <figure>
             <div class="media-frame"><video src="https://graphixs.cdn.yilmazdoga.net/videos/method/shape_prior_without.mp4" muted loop playsinline preload="metadata" data-autoplay></video></div>
             <span class="cap-tag off">Shape prior: off</span>
@@ -326,19 +308,6 @@
 
         <!-- static galleries -->
         <div class="gallery" style="margin-top:2.4rem;">
-          <div class="g-head">Spatio-temporal sparsity <span class="setting">&middot; 37% missing (Faulty Cam 3)</span></div>
-          <div class="g-scroll">
-            <div class="g-item gt"><img src="assets/images/results/q_fc3_gt.webp" alt="Ground truth"><div class="g-label">Ground Truth</div></div>
-            <div class="g-item"><img src="assets/images/results/q_fc3_4dgs_iclr.webp" alt="4DGS-1"><div class="g-label">4DGS-1</div></div>
-            <div class="g-item"><img src="assets/images/results/q_fc3_4dgs_cvpr.webp" alt="4DGS-2"><div class="g-label">4DGS-2</div></div>
-            <div class="g-item"><img src="assets/images/results/q_fc3_ex4dgs.webp" alt="Ex4DGS"><div class="g-label">Ex4DGS</div></div>
-            <div class="g-item"><img src="assets/images/results/q_fc3_ftgs.webp" alt="FreeTimeGS"><div class="g-label">FreeTimeGS</div></div>
-            <div class="g-item ours"><img src="assets/images/results/q_fc3_graphigs.webp" alt="GraphiGS (ours)"><div class="g-label">GraphiGS (Ours)</div></div>
-            <div class="g-item ours"><img src="assets/images/results/q_fc3_graphits.webp" alt="GraphiTS (ours)"><div class="g-label">GraphiTS (Ours)</div></div>
-          </div>
-        </div>
-
-        <div class="gallery">
           <div class="g-head">Spatial sparsity <span class="setting">&middot; 50% of cameras missing</span></div>
           <div class="g-scroll">
             <div class="g-item gt"><img src="assets/images/results/q_sv50_gt.webp" alt="Ground truth"><div class="g-label">Ground Truth</div></div>
@@ -352,11 +321,24 @@
         </div>
 
         <div class="gallery">
+          <div class="g-head">Spatio-temporal sparsity <span class="setting">&middot; 37% missing (Faulty Cam 3)</span></div>
+          <div class="g-scroll">
+            <div class="g-item gt"><img src="assets/images/results/q_fc3_gt.webp" alt="Ground truth"><div class="g-label">Ground Truth</div></div>
+            <div class="g-item"><img src="assets/images/results/q_fc3_4dgs_iclr.webp" alt="4DGS-1"><div class="g-label">4DGS-1</div></div>
+            <div class="g-item"><img src="assets/images/results/q_fc3_4dgs_cvpr.webp" alt="4DGS-2"><div class="g-label">4DGS-2</div></div>
+            <div class="g-item"><img src="assets/images/results/q_fc3_ex4dgs.webp" alt="Ex4DGS"><div class="g-label">Ex4DGS</div></div>
+            <div class="g-item"><img src="assets/images/results/q_fc3_ftgs.webp" alt="FreeTimeGS"><div class="g-label">FreeTimeGS</div></div>
+            <div class="g-item ours"><img src="assets/images/results/q_fc3_graphigs.webp" alt="GraphiGS (ours)"><div class="g-label">GraphiGS (Ours)</div></div>
+            <div class="g-item ours"><img src="assets/images/results/q_fc3_graphits.webp" alt="GraphiTS (ours)"><div class="g-label">GraphiTS (Ours)</div></div>
+          </div>
+        </div>
+
+        <div class="gallery">
           <div class="g-head">Upgrading an existing method <span class="setting">&middot; FreeTimeGS + GraphiXS</span></div>
-          <div class="g-scroll" style="grid-auto-columns: minmax(180px, 1fr);">
+          <div class="g-scroll">
             <div class="g-item gt"><img src="assets/images/results/q_upg_gt.webp" alt="Ground truth"><div class="g-label">Ground Truth</div></div>
             <div class="g-item"><img src="assets/images/results/q_upg_ftgs.webp" alt="FreeTimeGS"><div class="g-label">FreeTimeGS</div></div>
-            <div class="g-item ours"><img src="assets/images/results/q_upg_ours.webp" alt="FreeTimeGS upgraded with GraphiXS"><div class="g-label">+ GraphiXS (Ours)</div></div>
+            <div class="g-item ours"><img src="assets/images/results/q_upg_ours.webp" alt="FreeTimeGS upgraded with GraphiXS"><div class="g-label">FreeTimeGS (Upgraded)</div></div>
           </div>
         </div>
       </div>
@@ -400,9 +382,6 @@
       <div>
         <div class="foot-links">
           <a class="grad-hover" href="https://yilmazdoga.net">yilmazdoga.net</a>
-          <a class="grad-hover" href="https://github.com/realcrane/Graphical-X-Splatting">Code</a>
-          <a class="grad-hover" href="https://graphixs.cdn.yilmazdoga.net/Graphical_X_Splatting.pdf">Paper</a>
-          <a class="grad-hover" href="https://doi.org/10.1145/3799902.3811085">DOI</a>
         </div>
         <div style="margin-top:0.7rem;">&copy; 2026 Doğa Yılmaz &middot; GraphiXS &middot; SIGGRAPH 2026</div>
       </div>
