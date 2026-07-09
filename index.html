@@ -281,28 +281,56 @@
       <h2 class="section-title grad-text">Results</h2>
       <div class="section-body">
         <p>
-          Drag the divider to compare GraphiXS against Ex4DGS under a <b>faulty-camera</b> setting, where the capture
-          combines spatial and temporal corruption.
+          Compare <b>GraphiXS</b> against a baseline across every setting we tested. Pick a dataset, our
+          variant, a baseline, a scene and a capture setting, then <b>drag the divider</b> to wipe between the two.
         </p>
 
-        <figure>
-          <div class="ab-slider" id="ab-fcam2">
-            <div class="ab-bottom">
-              <video src="https://graphixs.cdn.yilmazdoga.net/videos/results/fcam2_ex4dgs.mp4" muted loop playsinline preload="metadata" data-autoplay></video>
+        <div class="explorer" id="explorer">
+          <div class="exp-controls">
+            <div class="exp-group" data-axis="ds">
+              <div class="exp-group-label">Dataset</div>
+              <div class="exp-btns"></div>
             </div>
-            <div class="ab-top">
-              <div class="ab-inner">
-                <video src="https://graphixs.cdn.yilmazdoga.net/videos/results/fcam2_graphixs.mp4" muted loop playsinline preload="metadata" data-autoplay></video>
-              </div>
+            <div class="exp-group" data-axis="ours">
+              <div class="exp-group-label">Ours (left)</div>
+              <div class="exp-btns"></div>
             </div>
-            <span class="ab-label left"><span class="ours">GraphiXS</span> (Ours)</span>
-            <span class="ab-label right">Ex4DGS</span>
-            <div class="ab-handle" aria-hidden="true">
-              <span class="grip"><svg viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5V7zm8 0v10l5-5-5-5z"/></svg></span>
+            <div class="exp-group" data-axis="baseline">
+              <div class="exp-group-label">Baseline (right)</div>
+              <div class="exp-btns"></div>
+            </div>
+            <div class="exp-group" data-axis="scene">
+              <div class="exp-group-label">Scene</div>
+              <div class="exp-btns"></div>
+            </div>
+            <div class="exp-group exp-group-wide" data-axis="cond">
+              <div class="exp-group-label">Setting</div>
+              <div class="exp-btns"></div>
             </div>
           </div>
-          <figcaption>Faulty Camera setting. <b>Left:</b> GraphiXS (Ours). <b>Right:</b> Ex4DGS. Drag to compare.</figcaption>
-        </figure>
+
+          <figure class="exp-figure">
+            <div class="exp-viewer">
+              <div class="ab-slider" id="exp-slider">
+                <div class="ab-bottom">
+                  <video id="exp-vid-base" muted loop playsinline preload="metadata" data-autoplay></video>
+                </div>
+                <div class="ab-top">
+                  <div class="ab-inner">
+                    <video id="exp-vid-ours" muted loop playsinline preload="metadata" data-autoplay></video>
+                  </div>
+                </div>
+                <span class="ab-label left" id="exp-label-ours"></span>
+                <span class="ab-label right" id="exp-label-base"></span>
+                <div class="ab-handle" aria-hidden="true">
+                  <span class="grip"><svg viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5V7zm8 0v10l5-5-5-5z"/></svg></span>
+                </div>
+              </div>
+              <div class="exp-todo" id="exp-todo" hidden></div>
+            </div>
+            <figcaption id="exp-caption"></figcaption>
+          </figure>
+        </div>
 
         <!-- static galleries -->
         <div class="gallery" style="margin-top:2.4rem;">
@@ -386,6 +414,7 @@
     </footer>
   </main>
 
+  <script src="js/gallery-data.js"></script>
   <script src="js/scripts.js"></script>
 </body>
 

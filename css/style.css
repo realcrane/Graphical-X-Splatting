@@ -383,6 +383,72 @@ figcaption b, figcaption strong { color: var(--main-txt-color); font-weight: 600
 .g-item.gt img { border-color: rgba(255,255,255,0.5); }
 :root[data-theme="light"] .g-item.gt img { border-color: rgba(0,0,0,0.4); }
 
+/* ---------------- results explorer ---------------- */
+.explorer { margin-top: 1.4rem; }
+
+.exp-controls { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.3rem; }
+.exp-group { min-width: 0; }
+.exp-group-label {
+  font-size: 0.78rem; letter-spacing: 0.10em; text-transform: uppercase;
+  font-weight: 600; color: var(--muted-txt-color); margin-bottom: 0.5rem;
+}
+.exp-btns { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
+
+/* the Setting axis groups its chips under small sub-labels, split by hairlines */
+.exp-subgroup {
+  display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center;
+  padding-right: 0.9rem; border-right: 1px solid var(--hairline);
+}
+.exp-subgroup:last-child { border-right: 0; padding-right: 0; }
+.exp-sublabel { font-size: 0.8rem; color: var(--muted-txt-color); }
+
+/* chips — compact .btn-like toggles */
+.exp-chip {
+  display: inline-flex; align-items: center; gap: 0.4em;
+  font-family: inherit; font-size: 0.94rem; line-height: 1.1;
+  padding: 0.34em 0.8em; cursor: pointer;
+  background: transparent; color: var(--main-txt-color);
+  border: 1.5px solid var(--card-border); border-radius: 9px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.exp-chip:hover { border-color: var(--nav-underline); }
+.exp-chip.ours { color: rgb(252, 176, 69); border-color: rgba(252, 176, 69, 0.4); }
+.exp-chip.gt { border-color: rgba(255, 255, 255, 0.35); }
+:root[data-theme="light"] .exp-chip.gt { border-color: rgba(0, 0, 0, 0.3); }
+/* active (selected) — rounded gradient border via border-box, like .btn:hover */
+.exp-chip.active {
+  border-color: transparent; font-weight: 600;
+  background:
+    linear-gradient(var(--main-bg-color), var(--main-bg-color)) padding-box,
+    var(--hover-color) border-box;
+}
+/* todo (missing combo) — dashed + muted, unless it is the current selection */
+.exp-chip.todo:not(.active) {
+  color: var(--muted-txt-color); border-color: var(--card-border); border-style: dashed;
+}
+.exp-chip .tag {
+  font-size: 0.66em; letter-spacing: 0.06em; text-transform: uppercase;
+  border: 1px solid var(--card-border); border-radius: 5px;
+  padding: 0.05em 0.4em; opacity: 0.85; color: var(--muted-txt-color);
+}
+
+/* viewer — reuses the .ab-slider, with an overlay for missing combinations */
+.exp-figure { margin: 0; }
+.exp-viewer { position: relative; }
+.exp-viewer .ab-slider { width: 100%; }
+.exp-todo {
+  position: absolute; inset: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  padding: 1.5rem;
+  border: 1px dashed var(--card-border); border-radius: 12px;
+  background: var(--card-bg); color: var(--muted-txt-color);
+  font-size: 1.04rem; line-height: 1.55;
+}
+.exp-todo[hidden] { display: none; }
+.exp-todo b { color: var(--main-txt-color); }
+.exp-caption { margin-top: 0.75rem; font-size: 0.95rem; color: var(--muted-txt-color); }
+.exp-caption .ours { color: rgb(252, 176, 69); font-weight: 600; }
+
 /* ---------------- poster ---------------- */
 .poster-wrap { display: grid; grid-template-columns: 1fr; gap: 1rem; }
 .poster-wrap a.media-frame { display: block; transition: transform 0.15s ease; }
@@ -433,12 +499,15 @@ figcaption b, figcaption strong { color: var(--main-txt-color); font-weight: 600
   .top-nav .nav-inner { padding: 0 14px; }
   .top-nav .nav-links { gap: 12px; }
   .footer { flex-direction: column; align-items: flex-start; }
+  /* let Setting sub-groups stack cleanly instead of butting against hairlines */
+  .exp-subgroup { border-right: 0; padding-right: 0; flex-basis: 100%; }
 }
 
 @media (max-width: 460px) {
   .hero { padding-top: 2rem; }
   .btn { font-size: 0.98rem; padding: 0.4em 0.9em; }
   .nav-links .nav-hide-sm { display: none; }
+  .exp-chip { font-size: 0.88rem; padding: 0.3em 0.7em; }
 }
 
 @media (prefers-reduced-motion: reduce) {
