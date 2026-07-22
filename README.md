@@ -4,7 +4,7 @@
 
 ¹ University College London · ² Baidu Inc. · ³ The University of Hong Kong
 
-[**arXiv**](https://arxiv.org/abs/2601.19843) · **SIGGRAPH** (coming soon) · [**BibTeX**](#citation)
+[**Project Page**](https://graphixs.yilmazdoga.net) · [**SIGGRAPH**](https://graphixs.cdn.yilmazdoga.net/Graphical_X_Splatting.pdf) · [**arXiv**](https://arxiv.org/abs/2601.19843) · [**BibTeX**](#citation)
 
 > This codebase has been tested on **Ubuntu 22.04 LTS and 24.04 LTS** with
 > **NVIDIA RTX 3090** and **RTX 4090** GPUs, as well as on an **NVIDIA GH200–based HPC cluster**.
